@@ -8,8 +8,8 @@ import { getAuth } from "../../lib/auth";
 
 export const prerender = false;
 
-const app = new Hono();
 
+const app = new Hono<{ Variables: { user: any } }>();
 // Catch-all Better Auth handler
 app.all("/api/auth/*", async (c) => {
 	const auth = getAuth(c.env);

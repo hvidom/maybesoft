@@ -16,9 +16,10 @@
 	},
 	"homepage": "https://github.com/hvidom/maybesoft#readme",
 	"scripts": {
+		"start": "bun run generate-types && bun run astro check && bun run astro dev --verbose",
 		"dev": "astro dev",
 		"browserslist": "bunx update-browserslist-db@latest",
-		"build": "bunx --bun astro build && bun run build:tailwind && bun run build:postcss",
+		"build": "bun run astro build && bun run build:tailwind && bun run build:postcss",
 		"sync": "astro sync",
 		"build:tailwind": "bun x @tailwindcss/cli -i src/styles/global.css -o dist/global.css --minify",
 		"build:postcss": "postcss dist/global.css -o dist/global.css",
@@ -72,6 +73,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.15",
+		"@cloudflare/workers-types": "^4.20260524.1",
 		"@types/bun": "latest",
 		"@types/node": "^25.9.1",
 		"@types/react": "^19.2.15",

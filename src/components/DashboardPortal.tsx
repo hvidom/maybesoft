@@ -73,6 +73,7 @@ export function DashboardPortal({ initialUser }: DashboardPortalProps) {
 		type: "success" | "error";
 	} | null>(null);
 
+	
 	const showToast = (message: string, type: "success" | "error") => {
 		setToast({ message, type });
 		setTimeout(() => setToast(null), 4000);
@@ -246,7 +247,7 @@ export function DashboardPortal({ initialUser }: DashboardPortalProps) {
 			<aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-slate-900 bg-slate-900/20 backdrop-blur flex flex-col flex-shrink-0">
 				<div className="h-16 border-b border-slate-900 px-6 flex items-center gap-2">
 					<Sparkles className="h-5 w-5 text-cyan-400 animate-pulse" />
-					<span className="font-extrabold bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent text-lg">
+					<span className="font-extrabold bg-linear-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent text-lg">
 						Maybesoft
 					</span>
 				</div>
@@ -254,7 +255,7 @@ export function DashboardPortal({ initialUser }: DashboardPortalProps) {
 				{/* User Card */}
 				<div className="p-6 border-b border-slate-900 bg-slate-900/10">
 					<div className="flex items-center gap-3">
-						<div className="h-10 w-10 rounded-xl bg-gradient-to-br from-cyan-500 to-indigo-500 flex items-center justify-center font-bold text-white shadow shadow-cyan-500/20">
+						<div className="h-10 w-10 rounded-xl bg-linear-to-br from-cyan-500 to-indigo-500 flex items-center justify-center font-bold text-white shadow shadow-cyan-500/20">
 							{user.name.charAt(0).toUpperCase()}
 						</div>
 						<div className="overflow-hidden">
