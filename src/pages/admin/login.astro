@@ -26,7 +26,7 @@ if (adminToken) {
   >
     <!-- Animated background grids & glow circles -->
     <div
-      class="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-60"
+      class="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-60"
     ></div>
 
     <div
@@ -39,16 +39,16 @@ if (adminToken) {
 
     <div class="relative z-10 w-full max-w-md">
       <Card
-        class="border-slate-800 bg-slate-900/60 backdrop-blur-xl shadow-2xl overflow-hidden ring-1 ring-slate-700/50"
+        className="border-slate-800 bg-slate-900/60 backdrop-blur-xl shadow-2xl overflow-hidden ring-1 ring-slate-700/50"
       >
         <!-- Top accent gradient line -->
         <div
-          class="h-1.5 w-full bg-gradient-to-r from-purple-500 via-violet-600 to-cyan-500"
+          class="h-1.5 w-full bg-linear-to-r from-purple-500 via-violet-600 to-cyan-500"
         ></div>
 
-        <CardHeader class="space-y-3 pt-8 text-center">
+        <CardHeader className="space-y-3 pt-8 text-center">
           <div
-            class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-cyan-500 shadow-lg shadow-purple-500/20"
+            class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-purple-500 to-cyan-500 shadow-lg shadow-purple-500/20"
           >
             <svg
               class="h-8 w-8 text-white"
@@ -65,16 +65,16 @@ if (adminToken) {
             </svg>
           </div>
           <CardTitle
-            class="text-3xl font-extrabold tracking-tight text-white bg-clip-text"
+            className="text-3xl font-extrabold tracking-tight text-white bg-clip-text"
           >
             Admin Portal
           </CardTitle>
-          <CardDescription class="text-slate-400 text-sm">
+          <CardDescription className="text-slate-400 text-sm">
             Authenticate to manage website codebase content
           </CardDescription>
         </CardHeader>
 
-        <CardContent class="space-y-6 pb-8 px-8">
+        <CardContent className="space-y-6 pb-8 px-8">
           <p class="text-center text-xs text-slate-500 leading-relaxed">
             Only authorized repository administrators can gain access. Logging
             in will link your GitHub account's developer permissions.
@@ -82,7 +82,7 @@ if (adminToken) {
 
           <a href="/admin/auth/login-redirect" class="block w-full">
             <Button
-              className="w-full h-12 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold rounded-xl border-none shadow-lg shadow-purple-600/35 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3"
+              className="w-full h-12 bg-linear-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold rounded-xl border-none shadow-lg shadow-purple-600/35 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3"
             >
               <svg class="h-5 w-5 fill-white" viewBox="0 0 24 24">
                 <path

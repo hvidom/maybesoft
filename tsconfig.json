@@ -3,7 +3,7 @@
 	"include": [".astro/types.d.ts", "**/*", "./worker-configuration.d.ts"],
 	"exclude": ["dist", "node_modules"],
 	"compilerOptions": {
-		"types": ["bun"],
+		"types": ["bun", "react"],
 		"lib": ["ESNext", "DOM"],
 		"target": "ESNext",
 		"strictNullChecks": true,
