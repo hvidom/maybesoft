@@ -10,6 +10,7 @@ const SITE = import.meta.env.PROD ? siteConfig.url : 'http://localhost:4321';
 // https://astro.build/config
 export default defineConfig({
   site: SITE,
+  output: 'server',
   server: {
     port: 4321,
   },

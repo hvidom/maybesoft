@@ -1,6 +1,9 @@
 {
 	"compatibility_date": "2026-05-24",
-	"compatibility_flags": ["global_fetch_strictly_public"],
+	"compatibility_flags": [
+		"global_fetch_strictly_public",
+		"nodejs_compat"
+	],
 	"name": "bun-react-template",
 	"main": "@astrojs/cloudflare/entrypoints/server",
 	"assets": {
@@ -9,5 +12,12 @@
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "maybesoft-db",
+			"database_id": "8c50e047-d1cb-4ee4-b816-86c559873d9d"
+		}
+	]
 }

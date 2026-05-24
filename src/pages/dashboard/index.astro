@@ -1,0 +1,29 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { DashboardPortal } from "@/components/DashboardPortal";
+import { getAuth } from "@/lib/auth";
+import { env } from 'cloudflare:workers';
+
+// Server-side check: Verify Better Auth Session
+const auth = getAuth(env);
+const session = await auth.api.getSession({
+  headers: Astro.request.headers,
+});
+
+// If no session exists, redirect user to the portal login screen
+if (!session) {
+  return Astro.redirect("/dashboard/login");
+}
+
+const user = {
+  id: session.user.id,
+  name: session.user.name,
+  email: session.user.email,
+  role: (session.user as any).role || 'lead',
+  image: session.user.image || undefined,
+};
+---
+
+<Layout title="User Dashboard" description="Access your business tools and inquiries workspace" mainClass="bg-slate-950">
+  <DashboardPortal client:load initialUser={user} />
+</Layout>

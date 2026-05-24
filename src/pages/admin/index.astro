@@ -1,9 +1,108 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { AdminCMS } from "@/components/AdminCMS";
+import { Octokit } from "octokit";
+import { env } from 'cloudflare:workers';
 
+// Server-side check: Verify GitHub Token
+const token = Astro.cookies.get("admin_github_token")?.value;
+if (!token) {
+  return Astro.redirect("/admin/login");
+}
 
+const owner = "hvidom";
+const repo = "maybesoft";
+
+let adminUser: any = null;
+let files: any[] = [];
+let connectionError = false;
+let connectionErrorMessage = "";
+
+try {
+  const octokit = new Octokit({ auth: token });
+  
+  // Verify authenticating user
+  const { data: userData } = await octokit.rest.users.getAuthenticated();
+  adminUser = {
+    login: userData.login,
+    avatar_url: userData.avatar_url,
+    html_url: userData.html_url
+  };
+
+  // Fetch blog markdown files
+  try {
+    const { data: repoContents } = await octokit.rest.repos.getContent({
+      owner,
+      repo,
+      path: "src/content/blog",
+    });
+
+    if (Array.isArray(repoContents)) {
+      for (const item of repoContents) {
+        if (item.type === "file" && (item.name.endsWith(".md") || item.name.endsWith(".mdx"))) {
+          // Fetch the raw string content of the file
+          const { data: rawContent } = await octokit.rest.repos.getContent({
+            owner,
+            repo,
+            path: item.path,
+            headers: {
+              accept: "application/vnd.github.raw",
+            },
+          });
+
+          files.push({
+            name: item.name,
+            path: item.path,
+            sha: item.sha,
+            rawContent: typeof rawContent === "string" ? rawContent : (rawContent as any).toString(),
+          });
+        }
+      }
+    }
+  } catch (contentErr: any) {
+    console.error("Failed to read blog repository directory:", contentErr);
+    // If the folder is empty or not created yet, we can pass an empty array
+    files = [];
+  }
+
+} catch (authErr: any) {
+  console.error("GitHub API Authentication or Connection Error:", authErr);
+  
+  if (authErr.status === 401) {
+    // Session token expired or revoked
+    Astro.cookies.delete("admin_github_token", { path: "/" });
+    return Astro.redirect("/admin/login");
+  }
+  
+  connectionError = true;
+  connectionErrorMessage = authErr.message || "Failed to establish secure handshake with GitHub.";
+}
 ---
 
-<Layout title="Dashboard" description="Admin page for owner">
-    <h1> Hello Admin</h1>
-</Layout>
+{connectionError ? (
+  <Layout title="Admin Error" description="Database or network failure">
+    <div class="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+      <div class="w-full max-w-md bg-slate-900 border border-rose-950 p-8 rounded-2xl text-center space-y-4 shadow-2xl">
+        <div class="h-12 w-12 rounded-full bg-rose-950/50 border border-rose-800 text-rose-400 flex items-center justify-center mx-auto">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h2 class="text-xl font-extrabold text-white">Connection Interrupted</h2>
+        <p class="text-sm text-slate-400 leading-relaxed">{connectionErrorMessage}</p>
+        <div class="pt-4 flex gap-4 justify-center">
+          <a href="/admin/login" class="px-5 py-2.5 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white font-semibold rounded-xl text-sm transition-colors">
+            Return to Login
+          </a>
+          <button onclick="window.location.reload()" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-xl text-sm transition-colors">
+            Try Again
+          </button>
+        </div>
+      </div>
+    </div>
+  </Layout>
+) : (
+  <Layout title="CMS Dashboard" description="Manage blog articles in real-time" mainClass="bg-slate-950">
+    <AdminCMS client:load initialFiles={files} adminUser={adminUser} />
+  </Layout>
+)}
