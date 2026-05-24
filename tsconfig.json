@@ -11,8 +11,7 @@
   ],
   "compilerOptions": {
     "types": [
-      "bun",
-      "react"
+      "bun"
     ],
     "lib": [
       "ESNext",

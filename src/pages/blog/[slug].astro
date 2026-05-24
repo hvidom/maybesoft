@@ -1,0 +1,54 @@
+---
+// src/pages/blog/[slug].astro
+import { getRemotePost } from "../../lib/github";
+import { marked } from "marked";
+import matter from "gray-matter"; // Optional: npm install gray-matter if parsing frontmatter title/dates
+import "@/styles/globals.css";
+import "@/styles/prose.css";
+import { Button } from "@/components/ui/button";
+// 1. Grab the slug from the URL parameters
+const { slug } = Astro.params;
+
+// 2. Fetch the raw file straight from your repository
+const remotePath = `src/content/blog/${slug}.md`;
+const rawMarkdownString = await getRemotePost(remotePath);
+
+if (!rawMarkdownString) {
+  return Astro.redirect("/404");
+}
+
+// 3. Separate your frontmatter metadata from the core content body
+const { data: frontmatter, content: markdownBody } = matter(rawMarkdownString);
+
+// 4. Compile the Markdown body text into clean structural HTML elements
+const htmlContent = await marked.parse(markdownBody);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{frontmatter.title || "Blog Post"}</title>
+    <style>
+      /* Simple layout wrapper for your blog typography styling */
+      .prose {
+        max-width: 65ch;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        font-family: sans-serif;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="prose">
+      <Button variant={"link"}><a href="/blog">← Back to publications</a></Button>
+      <hr />
+      
+      {frontmatter.date && <p><small>Published: {frontmatter.date}</small></p>}
+      <h1 class="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">{frontmatter.title}</h1>
+      
+      {/* Safely inject the parsed HTML content directly into your layout */}
+      <article set:html={htmlContent} />
+    </main>
+  </body>
+</html>

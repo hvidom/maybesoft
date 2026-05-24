@@ -1,0 +1,123 @@
+---
+// src/pages/blog/index.astro
+import { getAllRemotePosts } from "../../lib/github";
+import "@/styles/globals.css"
+// Fetch all the blog items from the maybesoft repository at build time
+const posts = await getAllRemotePosts();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MaybeSoft Blog</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background-color: #f9fafb;
+        color: #111827;
+        margin: 0;
+        padding: 2rem 1rem;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.025em;
+      }
+      .subtitle {
+        color: #4b5563;
+        margin-bottom: 3rem;
+        font-size: 1.1rem;
+      }
+      /* Clean flexbox/grid layout for post cards */
+      .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+      .post-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .post-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+      }
+      .image-wrapper {
+        width: 100%;
+        height: 200px;
+        background-color: #f3f4f6;
+        overflow: hidden;
+      }
+      .post-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .content-wrapper {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+      .post-date {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-bottom: 0.5rem;
+      }
+      .post-title {
+        font-size: 1.35rem;
+        margin: 0 0 0.75rem 0;
+        font-weight: 700;
+        line-height: 1.25;
+      }
+      .post-description {
+        font-size: 0.95rem;
+        color: #4b5563;
+        line-height: 1.5;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Maybesoft Publications</h1>
+      <p class="subtitle">Latest updates synced directly from the repository content collections.</p>
+
+      <div class="blog-grid">
+        {posts.map((post) => (
+          <a href={`/blog/${post.slug}`} class="post-card">
+            <div class="image-wrapper">
+              <img 
+                src={post.image} 
+                alt={`Cover visual for ${post.title}`} 
+                class="post-image"
+                loading="lazy"
+              />
+            </div>
+            <div class="content-wrapper">
+              <span class="post-date">{post.date}</span>
+              <h2 class="post-title">{post.title}</h2>
+              <p class="post-description">{post.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+      
+      {posts.length === 0 && (
+        <p style="color: #6b7280; text-align: center; margin-top: 4rem;">No articles found. Double check your GITHUB_TOKEN permissions.</p>
+      )}
+    </div>
+  </body>
+</html>
