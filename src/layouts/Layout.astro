@@ -14,16 +14,18 @@ const { title, description, mainClass } = Astro.props;
 ---
 
 <html lang="en" class="scroll-smooth">
-	<head>
-		<BaseHead title={title} description={description} />
-	</head>
-	<body class="min-h-screen bg-background text-foreground relative overflow-x-hidden">
-		<TailwindIndicator />
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body
+    class="min-h-screen bg-background text-foreground relative overflow-x-hidden"
+  >
+    <TailwindIndicator />
 
-		<div class="relative z-10">
-            <main class={cn(mainClass)}>
-				<slot />
-            </main>
-		</div>
-	</body>
+    <div class="relative z-10">
+      <main class={cn(mainClass)}>
+        <slot />
+      </main>
+    </div>
+  </body>
 </html>

@@ -1,0 +1,65 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
+	"overrides": [
+		{
+			"includes": ["**/*.svelte", "**/*.astro", "**/*.vue"],
+			"formatter": {
+				"indentStyle": "space",
+				"indentWidth": 2
+			},
+			"linter": {
+				"rules": {
+					"style": {
+						"useConst": "off",
+
+						"useImportType": "off"
+					},
+
+					"correctness": {
+						"noUnusedVariables": "off",
+
+						"noUnusedImports": "off"
+					}
+				}
+			}
+		}
+	],
+	"html": {
+		"experimentalFullSupportEnabled": true,
+		"formatter": { "indentScriptAndStyle": true }
+	},
+	"css": {
+		"parser": { "allowWrongLineComments": true, "tailwindDirectives": true }
+	},
+	"vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+	"files": { "ignoreUnknown": false },
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"formatWithErrors": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"noExplicitAny": "off",
+				"noDocumentCookie": "off"
+			},
+			"correctness": {
+				"noUnusedVariables": "off",
+				"noUnusedImports": "warn",
+				"useExhaustiveDependencies": "off",
+				"useJsxKeyInIterable": "off"
+			},
+			"style": { "useTemplate": "warn" },
+			"security": { "noDangerouslySetInnerHtml": "off" },
+			"a11y": { "noSvgWithoutTitle": "off", "useButtonType": "off" }
+		}
+	},
+	"javascript": { "formatter": { "quoteStyle": "double" } },
+	"assist": {
+		"enabled": true,
+		"actions": { "source": { "organizeImports": "on" } }
+	}
+}

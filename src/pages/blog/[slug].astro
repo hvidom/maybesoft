@@ -1,11 +1,12 @@
 ---
+import matter from "gray-matter"; // Optional: npm install gray-matter if parsing frontmatter title/dates
+import { marked } from "marked";
 // src/pages/blog/[slug].astro
 import { getRemotePost } from "../../lib/github";
-import { marked } from "marked";
-import matter from "gray-matter"; // Optional: npm install gray-matter if parsing frontmatter title/dates
 import "@/styles/globals.css";
 import "@/styles/prose.css";
 import { Button } from "@/components/ui/button";
+
 // 1. Grab the slug from the URL parameters
 const { slug } = Astro.params;
 
@@ -26,7 +27,7 @@ const htmlContent = await marked.parse(markdownBody);
 
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <title>{frontmatter.title || "Blog Post"}</title>
     <style>
       /* Simple layout wrapper for your blog typography styling */
@@ -41,13 +42,17 @@ const htmlContent = await marked.parse(markdownBody);
   </head>
   <body>
     <main class="prose">
-      <Button variant={"link"}><a href="/blog">← Back to publications</a></Button>
-      <hr />
-      
+      <Button variant={"link"}
+        ><a href="/blog">← Back to publications</a></Button
+      >
+      <hr>
+
       {frontmatter.date && <p><small>Published: {frontmatter.date}</small></p>}
-      <h1 class="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">{frontmatter.title}</h1>
-      
-      {/* Safely inject the parsed HTML content directly into your layout */}
+      <h1
+        class="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance"
+      >
+        {frontmatter.title}
+      </h1>
       <article set:html={htmlContent} />
     </main>
   </body>

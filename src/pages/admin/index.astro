@@ -1,8 +1,8 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import { AdminCMS } from "@/components/AdminCMS";
+import { env } from "cloudflare:workers";
 import { Octokit } from "octokit";
-import { env } from 'cloudflare:workers';
+import { AdminCMS } from "@/components/AdminCMS";
+import Layout from "@/layouts/Layout.astro";
 
 // Server-side check: Verify GitHub Token
 const token = Astro.cookies.get("admin_github_token")?.value;
@@ -20,13 +20,13 @@ let connectionErrorMessage = "";
 
 try {
   const octokit = new Octokit({ auth: token });
-  
+
   // Verify authenticating user
   const { data: userData } = await octokit.rest.users.getAuthenticated();
   adminUser = {
     login: userData.login,
     avatar_url: userData.avatar_url,
-    html_url: userData.html_url
+    html_url: userData.html_url,
   };
 
   // Fetch blog markdown files
@@ -39,7 +39,10 @@ try {
 
     if (Array.isArray(repoContents)) {
       for (const item of repoContents) {
-        if (item.type === "file" && (item.name.endsWith(".md") || item.name.endsWith(".mdx"))) {
+        if (
+          item.type === "file" &&
+          (item.name.endsWith(".md") || item.name.endsWith(".mdx"))
+        ) {
           // Fetch the raw string content of the file
           const { data: rawContent } = await octokit.rest.repos.getContent({
             owner,
@@ -54,7 +57,10 @@ try {
             name: item.name,
             path: item.path,
             sha: item.sha,
-            rawContent: typeof rawContent === "string" ? rawContent : (rawContent as any).toString(),
+            rawContent:
+              typeof rawContent === "string"
+                ? rawContent
+                : (rawContent as any).toString(),
           });
         }
       }
@@ -64,18 +70,18 @@ try {
     // If the folder is empty or not created yet, we can pass an empty array
     files = [];
   }
-
 } catch (authErr: any) {
   console.error("GitHub API Authentication or Connection Error:", authErr);
-  
+
   if (authErr.status === 401) {
     // Session token expired or revoked
     Astro.cookies.delete("admin_github_token", { path: "/" });
     return Astro.redirect("/admin/login");
   }
-  
+
   connectionError = true;
-  connectionErrorMessage = authErr.message || "Failed to establish secure handshake with GitHub.";
+  connectionErrorMessage =
+    authErr.message || "Failed to establish secure handshake with GitHub.";
 }
 ---
 
